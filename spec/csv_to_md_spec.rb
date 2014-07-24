@@ -46,4 +46,38 @@ Marlon    | Hahn      | 307 Bradtke Grove
     expect(actual).to eq(22)
   end
 
+  it 'will allow more than three sections' do
+    input = [["First", "Last", "Address", "Phone"],
+             ["Annamarie", "Romaguera", "9446 Schroeder Squares", "1234"],
+             ["Sebastian", "Hessel", "114 Frederic Centers", "12"],
+             ["Marlon", "Hahn", "307 Bradtke Grove", "12456"]]
+    expected = <<-BEGIN
+First     | Last      | Address                | Phone
+--------- | --------- | ---------------------- | -----
+Annamarie | Romaguera | 9446 Schroeder Squares | 1234
+Sebastian | Hessel    | 114 Frederic Centers   | 12
+Marlon    | Hahn      | 307 Bradtke Grove      | 12456
+    BEGIN
+
+    actual = CSVToMD.new(input).formatter
+    expect(actual).to eq(expected)
+  end
+
+  it 'will give the longest phone number' do
+    input = [["First", "Last", "Address", "Phone"],
+             ["Annamarie", "Romaguera", "9446 Schroeder Squares", "1234"],
+             ["Sebastian", "Hessel", "114 Frederic Centers", "12"],
+             ["Marlon", "Hahn", "307 Bradtke Grove", "12456"]]
+    actual = CSVToMD.new(input).longest_element(2)
+    expect(actual).to eq(22)
+  end
+
+  it 'will give the number of spaces needed' do
+    input = [["First", "Last", "Address", "Phone"],
+             ["Annamarie", "Romaguera", "9446 Schroeder Squares", "1234"],
+             ["Sebastian", "Hessel", "114 Frederic Centers", "12"],
+             ["Marlon", "Hahn", "307 Bradtke Grove", "12456"]]
+    actual = CSVToMD.new(input).number_of_spaces(0, 0)
+    expect(actual).to eq(5)
+  end
 end

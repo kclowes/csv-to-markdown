@@ -5,51 +5,41 @@ class CSVToMD
   end
 
   def formatter
-    section = 0
-    index = 1
-    string = headers(0)
-    while index < @input.length
+    category_number = 0
+    string = headers(0, category_number)
+    row = 1
+    while row < @input.length
       string <<
-        @input[index][section] + ' ' * how_many_fn_spaces(index) + ' | ' +
-          @input[index][section + 1] + ' ' * how_many_ln_spaces(index) + ' | ' +
-          @input[index][section + 2] + "\n"
-      index += 1
+        @input[row][category_number] + ' ' * number_of_spaces(row, category_number) + ' | ' +
+          @input[row][category_number + 1] + ' ' * number_of_spaces(row, category_number + 1) + ' | ' +
+          @input[row][category_number + 2] + ' ' * number_of_spaces(row, category_number + 2) + ' | ' +
+          @input[row][category_number + 3] + "\n"
+      row += 1
     end
     string
   end
 
-  def headers(index)
-    @input.first[index] + ' ' * how_many_fn_spaces(index) + ' | ' + @input.first[index + 1] + ' ' * how_many_ln_spaces(index) + ' | ' + @input.first[index + 2] + "\n" +
-      '-' * longest_first_name + ' | ' + '-' * longest_last_name + ' | ' + '-' * longest_address + "\n"
+  def headers(row, category_number)
+    @input[row][category_number] + ' ' * number_of_spaces(row, category_number) + ' | ' +
+      @input[row][category_number + 1] + ' ' * number_of_spaces(row, category_number + 1) + ' | ' +
+      @input[row][category_number + 2] + ' ' * number_of_spaces(row, category_number + 2) + ' | ' +
+      @input[row][category_number + 3] +
+      "\n" +
+      '-' * longest_element(category_number) + ' | ' +
+      '-' * longest_element(category_number + 1) + ' | ' +
+      '-' * longest_element(category_number + 2) +  ' | ' +
+      '-' * longest_element(category_number + 3) + "\n"
   end
 
-  def how_many_fn_spaces(index)
-    longest_first_name - @input[index][0].length
+  def number_of_spaces(row, category_number)
+    longest_element(category_number) - @input[row][category_number].length
   end
 
-  def how_many_ln_spaces(index)
-    longest_last_name - @input[index][1].length
-  end
-
-  def longest_first_name
-    first_name_array = @input.map do |item|
-      item[0]
+  def longest_element(category_number)
+    longest_element_array = @input.map do |item|
+      item[category_number]
     end
-    first_name_array.group_by(&:size).max.first
-  end
-
-  def longest_last_name
-    last_name_array = @input.map do |item|
-      item[1]
-    end
-    last_name_array.group_by(&:size).max.first
-  end
-
-  def longest_address
-    address_array = @input.map do |item|
-      item[2]
-    end
-    address_array.group_by(&:size).max.first
+    longest_element_array.group_by(&:size).max.first
   end
 
 end
