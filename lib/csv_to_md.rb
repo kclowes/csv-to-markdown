@@ -5,41 +5,34 @@ class CSVToMD
   end
 
   def formatter
-    category_number = 0
-    string = headers(0, category_number)
-    row = 1
-    while row < @input.length
-      string <<
-        @input[row][category_number] + ' ' * number_of_spaces(row, category_number) + ' | ' +
-          @input[row][category_number + 1] + ' ' * number_of_spaces(row, category_number + 1) + ' | ' +
-          @input[row][category_number + 2] + ' ' * number_of_spaces(row, category_number + 2) + ' | ' +
-          @input[row][category_number + 3] + "\n"
-      row += 1
-    end
-    string
+    body = @input[1..-1].map.with_index do |row, row_index|
+      row.map.with_index do |value, value_index|
+        value + " " * number_of_spaces(row_index + 1, value_index)
+      end.join(" | ")
+    end.join("\n")
+    "#{headers}\n#{body}"
   end
 
-  def headers(row, category_number)
-    @input[row][category_number] + ' ' * number_of_spaces(row, category_number) + ' | ' +
-      @input[row][category_number + 1] + ' ' * number_of_spaces(row, category_number + 1) + ' | ' +
-      @input[row][category_number + 2] + ' ' * number_of_spaces(row, category_number + 2) + ' | ' +
-      @input[row][category_number + 3] +
-      "\n" +
-      '-' * longest_element(category_number) + ' | ' +
-      '-' * longest_element(category_number + 1) + ' | ' +
-      '-' * longest_element(category_number + 2) +  ' | ' +
-      '-' * longest_element(category_number + 3) + "\n"
+  def headers
+    header_line = @input[0].map.with_index do |item, index|
+      item + ' ' * number_of_spaces(0, index)
+    end.join(' | ')
+
+    separator = @input[0].length.times.map do |index|
+      '-' * longest_element(index)
+    end.join(' | ')
+
+    [header_line, separator].join("\n")
   end
 
-  def number_of_spaces(row, category_number)
-    longest_element(category_number) - @input[row][category_number].length
+  def number_of_spaces(row_index, column_index)
+    longest_element(column_index) - @input[row_index][column_index].length
   end
 
-  def longest_element(category_number)
-    longest_element_array = @input.map do |item|
-      item[category_number]
-    end
-    longest_element_array.group_by(&:size).max.first
+  def longest_element(column_index)
+    @input.map do |item|
+      item[column_index]
+    end.group_by(&:size).max.first
   end
 
 end

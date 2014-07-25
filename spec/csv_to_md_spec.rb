@@ -7,13 +7,13 @@ describe CSVToMD do
              ["Annamarie", "Romaguera", "9446 Schroeder Squares"],
              ["Sebastian", "Hessel", "114 Frederic Centers"],
              ["Marlon", "Hahn", "307 Bradtke Grove"]]
-    expected = <<-BEGIN
-First     | Last      | Address
---------- | --------- | ----------------------
-Annamarie | Romaguera | 9446 Schroeder Squares
-Sebastian | Hessel    | 114 Frederic Centers
-Marlon    | Hahn      | 307 Bradtke Grove
-    BEGIN
+    expected = [
+      "First     | Last      | Address               ",
+      "--------- | --------- | ----------------------",
+      "Annamarie | Romaguera | 9446 Schroeder Squares",
+      "Sebastian | Hessel    | 114 Frederic Centers  ",
+      "Marlon    | Hahn      | 307 Bradtke Grove     ",
+    ].join("\n")
 
     actual = CSVToMD.new(input).formatter
     expect(actual).to eq(expected)
@@ -24,7 +24,7 @@ Marlon    | Hahn      | 307 Bradtke Grove
              ["Annamarie", "Romaguera", "9446 Schroeder Squares"],
              ["Sebastian", "Hessel", "114 Frederic Centers"],
              ["Marlon", "Hahn", "307 Bradtke Grove"]]
-    actual = CSVToMD.new(input).longest_first_name
+    actual = CSVToMD.new(input).longest_element(0)
     expect(actual).to eq(9)
   end
 
@@ -33,7 +33,7 @@ Marlon    | Hahn      | 307 Bradtke Grove
              ["Annamarie", "Romaguera", "9446 Schroeder Squares"],
              ["Sebastian", "Hessel", "114 Frederic Centers"],
              ["Marlon", "Hahn", "307 Bradtke Grove"]]
-    actual = CSVToMD.new(input).longest_last_name
+    actual = CSVToMD.new(input).longest_element(1)
     expect(actual).to eq(9)
   end
 
@@ -42,7 +42,7 @@ Marlon    | Hahn      | 307 Bradtke Grove
              ["Annamarie", "Romaguera", "9446 Schroeder Squares"],
              ["Sebastian", "Hessel", "114 Frederic Centers"],
              ["Marlon", "Hahn", "307 Bradtke Grove"]]
-    actual = CSVToMD.new(input).longest_address
+    actual = CSVToMD.new(input).longest_element(2)
     expect(actual).to eq(22)
   end
 
@@ -51,13 +51,13 @@ Marlon    | Hahn      | 307 Bradtke Grove
              ["Annamarie", "Romaguera", "9446 Schroeder Squares", "1234"],
              ["Sebastian", "Hessel", "114 Frederic Centers", "12"],
              ["Marlon", "Hahn", "307 Bradtke Grove", "12456"]]
-    expected = <<-BEGIN
-First     | Last      | Address                | Phone
---------- | --------- | ---------------------- | -----
-Annamarie | Romaguera | 9446 Schroeder Squares | 1234
-Sebastian | Hessel    | 114 Frederic Centers   | 12
-Marlon    | Hahn      | 307 Bradtke Grove      | 12456
-    BEGIN
+    expected = [
+      "First     | Last      | Address                | Phone",
+      "--------- | --------- | ---------------------- | -----",
+      "Annamarie | Romaguera | 9446 Schroeder Squares | 1234 ",
+      "Sebastian | Hessel    | 114 Frederic Centers   | 12   ",
+      "Marlon    | Hahn      | 307 Bradtke Grove      | 12456",
+    ].join("\n")
 
     actual = CSVToMD.new(input).formatter
     expect(actual).to eq(expected)
@@ -78,6 +78,6 @@ Marlon    | Hahn      | 307 Bradtke Grove      | 12456
              ["Sebastian", "Hessel", "114 Frederic Centers", "12"],
              ["Marlon", "Hahn", "307 Bradtke Grove", "12456"]]
     actual = CSVToMD.new(input).number_of_spaces(0, 0)
-    expect(actual).to eq(5)
+    expect(actual).to eq(4)
   end
 end
